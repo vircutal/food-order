@@ -11,7 +11,11 @@ import (
 var CreateSqlScriptCommand = &cobra.Command{
 	Use:   "new-sql",
 	Short: "Creating Sql Script",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error{
+		if(len(args) == 0){
+			err := fmt.Errorf("Need an extra argument...")
+			return err
+		}
 		fileName := args[0]
 		var err error
 		timestamp := time.Now().Format("20060102150405")
@@ -23,16 +27,18 @@ var CreateSqlScriptCommand = &cobra.Command{
 		err = os.WriteFile("internal/migrations/"+finalFileName+".up.sql", content, 0644)
 		if err != nil {
 			fmt.Println(err)
-			return
+			return err
 		}
 
 		//create down file
 		err = os.WriteFile("internal/migrations/"+finalFileName+".down.sql", content, 0644)
 		if err != nil {
 			fmt.Println(err)
-			return
+			return err
 		}
 
 		fmt.Println("Migration file created : ", finalFileName)
+
+		return nil
 	},
 }
