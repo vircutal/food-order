@@ -6,6 +6,8 @@ import (
 )
 
 func main() {
-	repositories.InitDB()
-	fmt.Println("fine")
+	db := repositories.InitDB()
+	if db != nil {
+		fmt.Println("fine")
+	}
 }

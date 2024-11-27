@@ -9,12 +9,9 @@ import (
 	"github.com/uptrace/bun/dialect/pgdialect"
 )
 
-var DB *sql.DB
-
 func InitDB() *bun.DB {
 	var err error
 
-	DB, err = sql.Open("sqlite3", "api.db")
 	DatabaseSourceName := ""
 	PostGrestDB, err := sql.Open("postgres", DatabaseSourceName)
 
