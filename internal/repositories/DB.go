@@ -27,10 +27,12 @@ func InitDB() *bun.DB {
 		PostGrestDB, err := sql.Open("postgres", DatabaseSourceName)
 
 		if err != nil {
+			//TODO : Print a phase that provides a good meaning
 			panic("Cant Open connection to DB")
 		}
 		db = bun.NewDB(PostGrestDB, pgdialect.New())
 
+		//TODO : Print a phase that provides a good meaning
 		fmt.Println("Connected to Database")
 
 	})

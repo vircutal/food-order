@@ -25,6 +25,7 @@ import (
 func main() {
 	db := repositories.InitDB()
 	if db != nil {
+		//TODO : Print a phase that provides a good meaning
 		fmt.Println("fine")
 	}
 	defer db.Close()
@@ -34,6 +35,7 @@ func main() {
 	// 	fmt.Println(err)
 	// }
 	if err := cli.RootCmd.Execute(); err != nil {
+		fmt.Println(err.Error())
 		return
 	}
 }
