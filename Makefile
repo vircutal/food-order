@@ -10,3 +10,6 @@ up:
 
 down:
 	@docker compose down
+
+migrate:
+	@go run main.go migrate

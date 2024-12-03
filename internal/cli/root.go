@@ -21,4 +21,5 @@ var RootCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(CreateSqlScriptCommand)
+	RootCmd.AddCommand(Migrate)
 }
