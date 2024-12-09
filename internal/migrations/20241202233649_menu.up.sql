@@ -5,5 +5,5 @@ CREATE TABLE
         food_name TEXT NOT NULL,
         food_price DECIMAL NOT NULL,
         food_description TEXT,
-        food_imageUrl TEXT
+        food_image_url TEXT
     )

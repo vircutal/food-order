@@ -2,7 +2,7 @@ package cli
 
 import (
 	"fmt"
-	"food-order/internal/repositories"
+	"food-order/internal/utils"
 	"os"
 	"strings"
 
@@ -28,7 +28,7 @@ var Migrate = &cobra.Command{
 			}
 		}
 
-		db := repositories.InitDB()
+		db := utils.InitDB()
 		fmt.Println("Migrate these file")
 		for _, val := range upFiles {
 			script, err := os.ReadFile(migrationDir + val)

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"food-order/internal/cli"
-	"food-order/internal/repositories"
+	"food-order/internal/utils"
 )
 
 // func executeSQLScript(db *bun.DB, scriptPath string) error {
@@ -23,7 +23,7 @@ import (
 // }
 
 func main() {
-	db := repositories.InitDB()
+	db := utils.InitDB()
 	if db != nil {
 		//TODO : Print a phase that provides a good meaning
 		fmt.Println("fine")
@@ -34,6 +34,7 @@ func main() {
 	// if err != nil {
 	// 	fmt.Println(err)
 	// }
+
 	if err := cli.RootCmd.Execute(); err != nil {
 		fmt.Println(err.Error())
 		return
