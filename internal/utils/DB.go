@@ -37,5 +37,4 @@ func InitDB() *bun.DB {
 
 	})
 	return db
-
 }
