@@ -33,7 +33,7 @@ func InitDB() *bun.DB {
 		db = bun.NewDB(PostGrestDB, pgdialect.New())
 
 		//TODO : Print a phase that provides a good meaning
-		fmt.Println("Connected to Database")
+		// fmt.Println("Connected to Database")
 
 	})
 	return db

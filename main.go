@@ -9,9 +9,9 @@ import (
 func main() {
 	//InitDB here so it can be shut down properly
 	db := utils.InitDB()
-	if db != nil {
+	if db == nil {
 		//TODO : Print a phase that provides a good meaning
-		fmt.Println("fine")
+		fmt.Println("Error with initialize db")
 	}
 	defer db.Close()
 

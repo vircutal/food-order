@@ -4,6 +4,7 @@ import (
 	"context"
 	"food-order/internal/utils"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -30,4 +31,10 @@ func (b *BaseDB[T]) BulkAdd(ctx context.Context, models []*T) error {
 func (b *BaseDB[T]) UpdateOne(ctx context.Context, model *T) error {
 	_, err := b.db.NewUpdate().Model(model).WherePK().Exec(ctx)
 	return err
+}
+
+func (b *BaseDB[T]) FindOneById(ctx context.Context, id uuid.UUID) (*T, error) {
+	var model T
+	err := b.db.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
+	return &model, err
 }
