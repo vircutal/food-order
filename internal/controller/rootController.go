@@ -14,8 +14,9 @@ func GetRootController() *fiber.App {
 	r.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-	r.Get("/test", handler.TableInfoService.GetTableInfoByStatus)
+	r.Get("/test", handler.TableInfoService.GetAllTableInfoByStatus)
 	r.Patch("/test", handler.TableInfoService.UpdateTableInfo)
+	r.Post("/test", handler.TableInfoService.CreateTableInfo)
 
 	//---------------------------------
 

@@ -1,20 +1,20 @@
 package TableInfoService
 
 import (
-	"fmt"
+	"food-order/internal/config/constant"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
-type Request struct {
+type UpdateTableInfoRequest struct {
 	TableID uuid.UUID `json:"table_id"`
 	Status  string    `json:"status"`
 }
 
 // Not done Yet
 func (ti *TableInfoService) UpdateTableInfo(ctx *fiber.Ctx) error {
-	var request Request
+	var request UpdateTableInfoRequest
 	response := map[string]string{}
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -24,16 +24,26 @@ func (ti *TableInfoService) UpdateTableInfo(ctx *fiber.Ctx) error {
 	targetTable, err := ti.TableInfoRepository.FindOneById(ctx.Context(), request.TableID)
 
 	if err != nil {
-		fmt.Println(err)
+		ctx.Status(500)
 		response["message"] = err.Error()
-		ctx.JSON(response)
-	} else {
-
-		response["message"] = "Success"
-		response["tableStatus"] = targetTable.Status
-		response["tableNumber"] = fmt.Sprintf("%d", targetTable.TableNumber)
-		ctx.JSON(response)
+		return ctx.JSON(response)
 	}
-	return err
+
+	if constant.TableInfoStatusTransitionRules[targetTable.Status][request.Status] {
+		targetTable.Status = request.Status
+		if err = ti.TableInfoRepository.UpdateOne(ctx.Context(), targetTable); err != nil {
+			ctx.Status(500)
+			response["message"] = "Server problem. Try Again..."
+		} else {
+			ctx.Status(200)
+			response["message"] = "Status changed"
+		}
+
+	} else {
+		ctx.Status(400)
+		response["message"] = "Status transition is not valid"
+	}
+
+	return ctx.JSON(response)
 
 }

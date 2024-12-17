@@ -9,6 +9,6 @@ type TableInfo struct {
 	bun.BaseModel `bun:"table:table_info"`
 
 	ID          uuid.UUID `bun:"id,pk,type:UUID"`
-	TableNumber int16     `bun:"table_number,notnull"`
+	TableNumber int       `bun:"table_number,notnull"`
 	Status      string    `bun:"status,type:text,notnull"`
 }

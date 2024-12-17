@@ -10,7 +10,7 @@ type GetTableInfoByStatusRequest struct {
 	Status string `json:"status"`
 }
 
-func (ti *TableInfoService) GetTableInfoByStatus(ctx *fiber.Ctx) error {
+func (ti *TableInfoService) GetAllTableInfoByStatus(ctx *fiber.Ctx) error {
 	var req GetTableInfoByStatusRequest
 
 	if err := ctx.BodyParser(&req); err != nil {
