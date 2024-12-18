@@ -38,3 +38,9 @@ func (b *BaseDB[T]) FindOneById(ctx context.Context, id uuid.UUID) (*T, error) {
 	err := b.db.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
 	return &model, err
 }
+
+func (b *BaseDB[T]) DeleteOneById(ctx context.Context, id uuid.UUID) error {
+	var model T
+	_, err := b.db.NewDelete().Model(&model).Where("id = ?", id).Exec(ctx)
+	return err
+}

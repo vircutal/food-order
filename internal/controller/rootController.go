@@ -17,6 +17,7 @@ func GetRootController() *fiber.App {
 	r.Get("/test", handler.TableInfoService.GetAllTableInfoByStatus)
 	r.Patch("/test", handler.TableInfoService.UpdateTableInfo)
 	r.Post("/test", handler.TableInfoService.CreateTableInfo)
+	r.Delete("/test", handler.TableInfoService.DeleteTableInfoByID)
 
 	//---------------------------------
 
