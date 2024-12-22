@@ -18,6 +18,14 @@ func GetBaseDB[T any]() *BaseDB[T] {
 	}
 }
 
+// func (b *BaseDB[T]) BeginTransaction() (*bun.Tx, error) {
+// 	tx, err := b.db.Begin()
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to begin transaction: %w", err)
+// 	}
+// 	return tx, nil
+// }
+
 func (b *BaseDB[T]) AddOne(ctx context.Context, model *T) error {
 	_, err := b.db.NewInsert().Model(model).Exec(ctx)
 	return err
@@ -43,4 +51,13 @@ func (b *BaseDB[T]) DeleteOneById(ctx context.Context, id uuid.UUID) error {
 	var model T
 	_, err := b.db.NewDelete().Model(&model).Where("id = ?", id).Exec(ctx)
 	return err
+}
+
+func (b *BaseDB[T]) CheckExistByID(ctx context.Context, id uuid.UUID) bool {
+	var model T
+	err := b.db.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
+	if err == nil {
+		return true
+	}
+	return false
 }

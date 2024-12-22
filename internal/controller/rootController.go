@@ -14,12 +14,17 @@ func GetRootController() *fiber.App {
 	r.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-	r.Get("/test", handler.TableInfoService.GetAllTableInfoByStatus)
-	r.Patch("/test", handler.TableInfoService.UpdateTableInfo)
-	r.Post("/test", handler.TableInfoService.CreateTableInfo)
-	r.Delete("/test", handler.TableInfoService.DeleteTableInfoByID)
+	r.Get("/FindAllTableInfoByStatus", handler.TableInfoService.FindAllTableInfoByStatus)
+	r.Patch("/UpdateTableInfo", handler.TableInfoService.UpdateTableInfoStatus)
+	r.Post("/CreateTableInfo", handler.TableInfoService.CreateTableInfo)
+	r.Delete("/DeleteTableInfoByID", handler.TableInfoService.DeleteTableInfoByID)
 
-	//---------------------------------
+	r.Get("/FindCustomerHistoryByID", handler.CustomerHistoryService.FindCustomerHistoryByID)
+	r.Post("/CreateCustomerHistory", handler.CustomerHistoryService.CreateCustomerHistory)
+	r.Delete("/DeleteCustomerHistoryByID", handler.CustomerHistoryService.DeleteCustomerHistoryByID)
+	r.Patch("/UpdateCustomerHistory", handler.CustomerHistoryService.UpdateCustomerHistory)
+
+	r.Post("/CreateMenu", handler.MenuService.CreateMenu)
 
 	return r
 }

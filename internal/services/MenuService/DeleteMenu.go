@@ -1,4 +1,4 @@
-package TableInfoService
+package MenuService
 
 import (
 	"food-order/internal/utils"
@@ -7,14 +7,14 @@ import (
 	"github.com/google/uuid"
 )
 
-type DeleteTableInfoByIDRequest struct {
-	TableId uuid.UUID `json:"table_id"`
+type DeleteMenuRequest struct {
+	MenuID uuid.UUID `json:"menu_id"`
 }
 
-func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
+func (m *MenuService) DeleteMenu(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
-	var request DeleteTableInfoByIDRequest
+	var request DeleteMenuRequest
 	response := map[string]interface{}{}
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -22,20 +22,15 @@ func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
 	}
 	//**************************************************************
 	//**************************************************************
-
-	if !ti.TableInfoRepository.CheckTableIDExist(ctx.Context(), request.TableId) {
-		return utils.SendBadRequest(ctx, &response, "Table Id is not exist")
-
+	if !m.MenuRepository.CheckExistByID(ctx.Context(), request.MenuID) {
+		return utils.SendBadRequest(ctx, &response, "menu does not exist")
 	}
 
-	err := ti.TableInfoRepository.DeleteOneById(ctx.Context(), request.TableId)
-
-	if err != nil {
+	if err := m.MenuRepository.DeleteOneById(ctx.Context(), request.MenuID); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	ctx.Status(200)
-	response["message"] = "Deleted"
+	response["message"] = "deleted"
 	return ctx.JSON(response)
-
 }

@@ -1,8 +1,9 @@
 package TableInfoService
 
 import (
-	"food-order/internal/config/constant"
+	"food-order/internal/config"
 	"food-order/internal/models"
+	"food-order/internal/utils"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,42 +11,43 @@ import (
 )
 
 type AddTableInfoRequest struct {
-	TableNumber int `json:"table_number"`
+	TableNumber string `json:"table_number"`
 }
 
 func (ti *TableInfoService) CreateTableInfo(ctx *fiber.Ctx) error {
-	//define request and response
+	//initialize instance using in this function
+	//**************************************************************
 	var request AddTableInfoRequest
-	response := map[string]string{}
+	response := map[string]interface{}{}
 	//parsing request
 	if err := ctx.BodyParser(&request); err != nil {
-		response["message"] = err.Error()
-		ctx.JSON(response)
-		return err
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
+
+	tableNumber, _ := strconv.Atoi(request.TableNumber)
+	//**************************************************************
+	//**************************************************************
+
 	//check if table exist
-	if ti.TableInfoRepository.CheckTableNumberExist(ctx.Context(), request.TableNumber) {
-		response["message"] = "Table already exists"
-		ctx.Status(400)
-		return ctx.JSON(response)
+	if ti.TableInfoRepository.CheckTableNumberExist(ctx.Context(), tableNumber) {
+		return utils.SendBadRequest(ctx, &response, "Table already exists")
 	}
 
-	tmp := models.TableInfo{
+	//init new TableInfo object
+	newTableInfo := models.TableInfo{
 		ID:          uuid.New(),
-		TableNumber: request.TableNumber,
-		Status:      constant.TableIsAvailable,
+		TableNumber: tableNumber,
+		Status:      config.TableIsAvailable,
 	}
 
-	// querying TableInfo
-	err := ti.TableInfoRepository.AddOne(ctx.Context(), &tmp)
+	// Inserting TableInfo
+	err := ti.TableInfoRepository.AddOne(ctx.Context(), &newTableInfo)
 	if err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-	} else {
-		ctx.Status(200)
-		response["message"] = "table is successfully added"
-		response["tableNumber"] = strconv.Itoa(request.TableNumber)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
-	//
+
+	ctx.Status(200)
+	response["message"] = "table is successfully added"
+	response["result"] = newTableInfo
 	return ctx.JSON(response)
 }

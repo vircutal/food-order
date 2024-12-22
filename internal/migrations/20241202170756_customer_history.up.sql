@@ -5,7 +5,8 @@ CREATE TABLE
         status TEXT NOT NULL,
         time_in TIMESTAMP NOT NULL DEFAULT NOW (),
         time_out TIMESTAMP,
-        total_price INTEGER
+        payment_time TIMESTAMP,
+        total_price REAL
     );
 
 -- CHECK (status IN ('paid', 'occupied'))

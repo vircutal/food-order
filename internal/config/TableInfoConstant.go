@@ -1,13 +1,10 @@
-package constant
+package config
 
-var CustomerHistoryStatusTransitionRules = map[string]map[string]bool{
-	CustomerPaid: {
-		CustomerOccupied: true,
-	},
-	CustomerOccupied: {
-		CustomerPaid: true,
-	},
-}
+const (
+	TableIsAvailable = "available"
+	TableIsOccupied  = "occupied"
+	TableIsReserved  = "reserved"
+)
 
 var TableInfoStatusTransitionRules = map[string]map[string]bool{
 	TableIsAvailable: {
@@ -21,4 +18,10 @@ var TableInfoStatusTransitionRules = map[string]map[string]bool{
 		TableIsOccupied:  true,
 		TableIsAvailable: true,
 	},
+}
+
+var TableInfoStatus = map[string]bool{
+	TableIsAvailable: true,
+	TableIsOccupied:  true,
+	TableIsReserved:  true,
 }

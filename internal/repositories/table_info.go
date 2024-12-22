@@ -46,3 +46,18 @@ func (t *TableInfoRepository) CheckTableIDExist(ctx context.Context, TableId uui
 	}
 	return false
 }
+
+func (t *TableInfoRepository) CheckTableStatus(ctx context.Context, TableNumber int, status string) bool {
+	var model models.TableInfo
+	err := t.db.NewSelect().Model(&model).Where("table_number = ?", TableNumber).Where("status = ?", status).Scan(ctx)
+	if err == nil {
+		return true
+	}
+	return false
+}
+
+func (t *TableInfoRepository) FindOneByTableNumber(ctx context.Context, TableNumber int) (*models.TableInfo, error) {
+	var model models.TableInfo
+	err := t.db.NewSelect().Model(&model).Where("table_number = ?", TableNumber).Scan(ctx)
+	return &model, err
+}

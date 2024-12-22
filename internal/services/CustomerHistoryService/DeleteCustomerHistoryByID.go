@@ -1,4 +1,4 @@
-package TableInfoService
+package CustomerHistoryService
 
 import (
 	"food-order/internal/utils"
@@ -7,14 +7,14 @@ import (
 	"github.com/google/uuid"
 )
 
-type DeleteTableInfoByIDRequest struct {
-	TableId uuid.UUID `json:"table_id"`
+type DeleteCustomerHistoryByIDRequest struct {
+	CustomerHistoryID uuid.UUID `json:"customer_history_id"`
 }
 
-func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
+func (ch *CustomerHistoryService) DeleteCustomerHistoryByID(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
-	var request DeleteTableInfoByIDRequest
+	var request DeleteCustomerHistoryByIDRequest
 	response := map[string]interface{}{}
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -23,19 +23,14 @@ func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
 	//**************************************************************
 	//**************************************************************
 
-	if !ti.TableInfoRepository.CheckTableIDExist(ctx.Context(), request.TableId) {
-		return utils.SendBadRequest(ctx, &response, "Table Id is not exist")
-
+	if !ch.CustomerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
+		return utils.SendBadRequest(ctx, &response, "Table is not exist")
 	}
 
-	err := ti.TableInfoRepository.DeleteOneById(ctx.Context(), request.TableId)
-
-	if err != nil {
+	if err := ch.CustomerHistoryRepository.DeleteOneById(ctx.Context(), request.CustomerHistoryID); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
-
-	ctx.Status(200)
 	response["message"] = "Deleted"
+	response["id"] = request.CustomerHistoryID.String()
 	return ctx.JSON(response)
-
 }

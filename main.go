@@ -6,6 +6,8 @@ import (
 	"food-order/internal/utils"
 )
 
+// b, _ := db.Begin()
+// btx, _ := db.BeginTx()
 func main() {
 	//InitDB here so it can be shut down properly
 	db := utils.InitDB()

@@ -4,38 +4,31 @@ import (
 	"food-order/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
-type DeleteTableInfoByIDRequest struct {
-	TableId uuid.UUID `json:"table_id"`
+type GetTableInfoByStatusRequest struct {
+	Status string `json:"status"`
 }
 
-func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
+func (ti *TableInfoService) FindAllTableInfoByStatus(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
-	var request DeleteTableInfoByIDRequest
+	var request GetTableInfoByStatusRequest
 	response := map[string]interface{}{}
 
+	//parse body
 	if err := ctx.BodyParser(&request); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 	//**************************************************************
 	//**************************************************************
 
-	if !ti.TableInfoRepository.CheckTableIDExist(ctx.Context(), request.TableId) {
-		return utils.SendBadRequest(ctx, &response, "Table Id is not exist")
-
-	}
-
-	err := ti.TableInfoRepository.DeleteOneById(ctx.Context(), request.TableId)
-
+	tableInfos, err := ti.TableInfoRepository.GetAllByStatus(ctx.Context(), request.Status)
 	if err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	ctx.Status(200)
-	response["message"] = "Deleted"
+	ctx.JSON(200)
+	response["result"] = *tableInfos
 	return ctx.JSON(response)
-
 }

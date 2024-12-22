@@ -1,6 +1,8 @@
 package repositories
 
-import "food-order/internal/models"
+import (
+	"food-order/internal/models"
+)
 
 type CustomerHistoryRepository struct {
 	*BaseDB[models.CustomerHistory]
