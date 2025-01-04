@@ -33,10 +33,10 @@ func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
 
 	totalPrice := 0.00
 	for _, val := range *orders {
-		if val.FoodPrice < 0 {
+		if val.MenuItemPrice < 0 {
 			return utils.SendInternalServerError(ctx, &response, "Food Price is a negative value. Need Admin's check")
 		}
-		totalPrice += (val.FoodPrice * float64(val.Quantity))
+		totalPrice += (val.MenuItemPrice * float64(val.Quantity))
 	}
 
 	//fmt.Println(totalPrice)

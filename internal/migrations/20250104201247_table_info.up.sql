@@ -5,13 +5,3 @@ CREATE TABLE
         table_number INTEGER NOT NULL,
         status TEXT NOT NULL
     );
-
---CHECK (status IN ('available', 'occupied', 'reserved'))
--- INSERT INTO
---     table_info (table_number)
--- VALUES
---     (1),
---     (2),
---     (3),
---     (4),
---     (5);

@@ -36,7 +36,10 @@ var Migrate = &cobra.Command{
 				fmt.Println(err)
 				return err
 			}
-			db.Exec(string(script))
+			_, err = db.Exec(string(script))
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 			fmt.Println(" - " + val)
 		}
 		return nil
