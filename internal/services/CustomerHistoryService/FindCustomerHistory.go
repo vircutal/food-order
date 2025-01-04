@@ -1,6 +1,8 @@
 package CustomerHistoryService
 
 import (
+	"food-order/internal/utils"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
@@ -17,24 +19,18 @@ func (ch *CustomerHistoryService) FindCustomerHistoryByID(ctx *fiber.Ctx) error 
 	response := map[string]interface{}{}
 
 	if err := ctx.BodyParser(&request); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendBadRequest(ctx, &response, err.Error())
 	}
 	//**************************************************************
 	//**************************************************************
 
 	if !ch.CustomerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
-		ctx.Status(400)
-		response["message"] = "Customer History is not exist"
-		return ctx.JSON(response)
+		return utils.SendBadRequest(ctx, &response, "Customer History is not exist")
 	}
 
 	targetCustomerHistory, err := ch.CustomerHistoryRepository.FindOneById(ctx.Context(), request.CustomerHistoryID)
 	if err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendBadRequest(ctx, &response, err.Error())
 	}
 
 	response["result"] = *targetCustomerHistory
