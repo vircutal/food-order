@@ -13,6 +13,8 @@ type MakePaymentRequest struct {
 }
 
 func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
+	//initialize instance using in this function
+	//**************************************************************
 	var request MakePaymentRequest
 	response := map[string]interface{}{}
 	orderLogRepository := repositories.GetOrderLogRepository()
@@ -31,6 +33,9 @@ func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
+	//**************************************************************
+	//**************************************************************
+
 	totalPrice := 0.00
 	for _, val := range *orders {
 		if val.MenuItemPrice < 0 {
@@ -38,8 +43,6 @@ func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
 		}
 		totalPrice += (val.MenuItemPrice * float64(val.Quantity))
 	}
-
-	//fmt.Println(totalPrice)
 
 	targetCustomerHistory, err := ch.CustomerHistoryRepository.FindOneById(ctx.Context(), request.CustomerHistoryId)
 	if err != nil {
