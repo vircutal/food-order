@@ -23,7 +23,7 @@ func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
 	//**************************************************************
 	//**************************************************************
 
-	if !ti.TableInfoRepository.CheckTableIDExist(ctx.Context(), request.TableId) {
+	if !ti.TableInfoRepository.CheckExistByID(ctx.Context(), request.TableId) {
 		return utils.SendBadRequest(ctx, &response, "Table Id is not exist")
 
 	}

@@ -56,8 +56,8 @@ func (b *BaseDB[T]) DeleteOneById(ctx context.Context, id uuid.UUID) error {
 func (b *BaseDB[T]) CheckExistByID(ctx context.Context, id uuid.UUID) bool {
 	var model T
 	err := b.db.NewSelect().Model(&model).Where("id = ?", id).Scan(ctx)
-	if err == nil {
-		return true
+	if err != nil {
+		return false
 	}
-	return false
+	return true
 }

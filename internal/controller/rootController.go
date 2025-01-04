@@ -22,9 +22,11 @@ func GetRootController() *fiber.App {
 	r.Get("/FindCustomerHistoryByID", handler.CustomerHistoryService.FindCustomerHistoryByID)
 	r.Post("/CreateCustomerHistory", handler.CustomerHistoryService.CreateCustomerHistory)
 	r.Delete("/DeleteCustomerHistoryByID", handler.CustomerHistoryService.DeleteCustomerHistoryByID)
-	r.Patch("/UpdateCustomerHistory", handler.CustomerHistoryService.UpdateCustomerHistory)
+	r.Patch("/UpdateCustomerHistory", handler.CustomerHistoryService.UpdateTableNumberInCustomerHistory)
 
-	r.Post("/CreateMenu", handler.MenuService.CreateMenu)
+	//r.Post("/FindOrderLogWithFK", handler.FindOrderLogWithFK)
+
+	r.Patch("/MakePayment", handler.CustomerHistoryService.MakePayment)
 
 	return r
 }

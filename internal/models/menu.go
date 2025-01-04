@@ -8,9 +8,7 @@ import (
 type Menu struct {
 	bun.BaseModel `bun:"table:menu"`
 
-	ID              uuid.UUID `bun:"id,pk,type:UUID"`
-	FoodName        string    `bun:"food_name,type:TEXT,notnull"`
-	FoodPrice       float64   `bun:"food_price,type:REAL,notnull"`
-	FoodDescription *string   `bun:"food_description,type:TEXT"`
-	FoodImageURL    *string   `bun:"food_image_url,type:TEXT"`
+	ID           uuid.UUID `bun:"id,pk,type:UUID"`
+	MenuName     string    `bun:"menu_name,type:text"`
+	RestaurantID uuid.UUID `bun:"restaurant_id,type:UUID"`
 }

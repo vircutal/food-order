@@ -15,6 +15,6 @@ type OrderLog struct {
 	FoodID           uuid.UUID `bun:"food_id,type:UUID"`
 	FoodPrice        float64   `bun:"food_price,type:REAL,notnull"`
 	Quantity         int       `bun:"quantity,type:INTEGER,notnull"`
-	OrderDescription string    `bun:"order_description,type:TEXT"`
+	OrderDescription *string   `bun:"order_description,type:TEXT"`
 	OrderedTime      time.Time `bun:"ordered_time,type:TIMESTAMP,notnull"`
 }

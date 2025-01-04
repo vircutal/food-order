@@ -3,8 +3,6 @@ package repositories
 import (
 	"context"
 	"food-order/internal/models"
-
-	"github.com/google/uuid"
 )
 
 type TableInfoRepository struct {
@@ -32,28 +30,19 @@ func (t *TableInfoRepository) GetTableInfoByTableNumber(ctx context.Context, Tab
 func (t *TableInfoRepository) CheckTableNumberExist(ctx context.Context, TableNumber int) bool {
 	var model models.TableInfo
 	err := t.db.NewSelect().Model(&model).Where("table_number = ?", TableNumber).Scan(ctx)
-	if err == nil {
-		return true
+	if err != nil {
+		return false
 	}
-	return false
-}
-
-func (t *TableInfoRepository) CheckTableIDExist(ctx context.Context, TableId uuid.UUID) bool {
-	var model models.TableInfo
-	err := t.db.NewSelect().Model(&model).Where("id = ?", TableId).Scan(ctx)
-	if err == nil {
-		return true
-	}
-	return false
+	return true
 }
 
 func (t *TableInfoRepository) CheckTableStatus(ctx context.Context, TableNumber int, status string) bool {
 	var model models.TableInfo
 	err := t.db.NewSelect().Model(&model).Where("table_number = ?", TableNumber).Where("status = ?", status).Scan(ctx)
-	if err == nil {
-		return true
+	if err != nil {
+		return false
 	}
-	return false
+	return true
 }
 
 func (t *TableInfoRepository) FindOneByTableNumber(ctx context.Context, TableNumber int) (*models.TableInfo, error) {

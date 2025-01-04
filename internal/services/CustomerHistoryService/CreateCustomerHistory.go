@@ -3,7 +3,7 @@ package CustomerHistoryService
 import (
 	"food-order/internal/config"
 	"food-order/internal/models"
-	"food-order/internal/services/TableInfoService"
+	"food-order/internal/repositories"
 	"food-order/internal/utils"
 	"strconv"
 	"time"
@@ -24,7 +24,7 @@ func (ch *CustomerHistoryService) CreateCustomerHistory(ctx *fiber.Ctx) error {
 	response := map[string]interface{}{}
 
 	//Get service
-	tableInfoService := TableInfoService.GetTableInfoService()
+	tableInfoRepository := repositories.GetTableInfoRepository()
 
 	//parse request body
 	if err := ctx.BodyParser(&request); err != nil {
@@ -36,12 +36,12 @@ func (ch *CustomerHistoryService) CreateCustomerHistory(ctx *fiber.Ctx) error {
 	//**************************************************************
 
 	//check if table_number exists
-	if !tableInfoService.TableInfoRepository.CheckTableNumberExist(ctx.Context(), TableNumber) {
+	if !tableInfoRepository.CheckTableNumberExist(ctx.Context(), TableNumber) {
 		return utils.SendBadRequest(ctx, &response, "Table doesnt exist")
 	}
 
 	//check if table is available
-	if !tableInfoService.TableInfoRepository.CheckTableStatus(ctx.Context(), TableNumber, config.TableIsAvailable) {
+	if !tableInfoRepository.CheckTableStatus(ctx.Context(), TableNumber, config.TableIsAvailable) {
 		return utils.SendBadRequest(ctx, &response, "Table is not available")
 	}
 
