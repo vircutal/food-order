@@ -3,6 +3,7 @@ package CustomerHistoryService
 import (
 	"food-order/internal/config"
 	"food-order/internal/repositories"
+	"food-order/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -21,41 +22,29 @@ func (ch *CustomerHistoryService) UpdateTableNumberInCustomerHistory(ctx *fiber.
 	tableInfoRepository := repositories.GetTableInfoRepository()
 
 	if err := ctx.BodyParser(&request); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	if !ch.CustomerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
-		ctx.Status(400)
-		response["message"] = "id is not exist"
-		return ctx.JSON(response)
+		return utils.SendBadRequest(ctx, &response, "id is not exist")
 	}
 
 	targetCustomerHistory, err := ch.CustomerHistoryRepository.FindOneById(ctx.Context(), request.CustomerHistoryID)
 	if err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	oldTable, err := tableInfoRepository.FindOneByTableNumber(ctx.Context(), targetCustomerHistory.TableNumber)
 	if err := tableInfoRepository.UpdateOne(ctx.Context(), oldTable); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 	newTable, err := tableInfoRepository.FindOneByTableNumber(ctx.Context(), request.TableNumber)
 	if err := tableInfoRepository.UpdateOne(ctx.Context(), newTable); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	if newTable.Status != config.TableIsAvailable {
-		ctx.Status(400)
-		response["message"] = "table is not available"
-		return ctx.JSON(response)
+		return utils.SendBadRequest(ctx, &response, "table is not available")
 	}
 	//**************************************************************
 	//**************************************************************
@@ -63,25 +52,19 @@ func (ch *CustomerHistoryService) UpdateTableNumberInCustomerHistory(ctx *fiber.
 	//release old table
 	oldTable.Status = config.TableIsAvailable
 	if err := tableInfoRepository.UpdateOne(ctx.Context(), oldTable); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	// lock new table
 	newTable.Status = config.TableIsOccupied
 	if err := tableInfoRepository.UpdateOne(ctx.Context(), newTable); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	//update customer
 	targetCustomerHistory.TableNumber = request.TableNumber
 	if err := ch.CustomerHistoryRepository.UpdateOne(ctx.Context(), targetCustomerHistory); err != nil {
-		ctx.Status(500)
-		response["message"] = err.Error()
-		return ctx.JSON(response)
+		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
 	ctx.Status(200)
