@@ -2,6 +2,7 @@ package MenuService
 
 import (
 	"food-order/internal/models"
+	"food-order/internal/repositories"
 	"food-order/internal/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,12 @@ func (ms *MenuService) CreateMenu(ctx *fiber.Ctx) error {
 	//**************************************************************
 	var request CreateMenuRequest
 	response := map[string]interface{}{}
+
+	restaurantRepository := repositories.GetRestaurantRepository()
+
+	if restaurantRepository.CheckExistByID(ctx.Context(), request.RestaurantID) {
+		return utils.SendBadRequest(ctx, &response, "restaurant id is not exist")
+	}
 	//**************************************************************
 	//**************************************************************
 

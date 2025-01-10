@@ -8,6 +8,6 @@ CREATE TABLE
         quantity INTEGER NOT NULL,
         order_description TEXT,
         ordered_time TIMESTAMP NOT NULL,
-        FOREIGN KEY (customer_history_id) REFERENCES customer_history (id),
-        FOREIGN KEY (menu_item_id) REFERENCES menu_item (id)
+        FOREIGN KEY (customer_history_id) REFERENCES customer_history (id) ON DELETE CASCADE,
+        FOREIGN KEY (menu_item_id) REFERENCES menu_item (id) ON DELETE CASCADE
     );

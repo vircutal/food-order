@@ -7,5 +7,5 @@ CREATE TABLE
         menu_item_price REAL NOT NULL,
         menu_item_description TEXT,
         menu_item_image_url TEXT,
-        FOREIGN KEY (menu_id) REFERENCES menu (id)
+        FOREIGN KEY (menu_id) REFERENCES menu (id) ON DELETE CASCADE
     )
