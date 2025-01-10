@@ -34,8 +34,7 @@ func (ti *TableInfoService) DeleteTableInfoByID(ctx *fiber.Ctx) error {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	ctx.Status(200)
 	response["message"] = "Deleted"
-	return ctx.JSON(response)
+	return ctx.Status(200).JSON(response)
 
 }
