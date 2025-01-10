@@ -10,4 +10,5 @@ type Restaurant struct {
 
 	ID             uuid.UUID `bun:"id,pk,type:UUID"`
 	RestaurantName string    `bun:"restaurant_name,notnull"`
+	Branch         string    `bun:"branch,notnull"`
 }
