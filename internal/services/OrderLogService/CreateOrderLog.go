@@ -33,12 +33,12 @@ func (orderLogService *OrderLogService) CreateOrderLog(ctx *fiber.Ctx) error {
 	}
 
 	//check if menu_item_id exists
-	if menuItemRepository.CheckExistByID(ctx.Context(), request.MenuItemID) {
+	if !menuItemRepository.CheckExistByID(ctx.Context(), request.MenuItemID) {
 		return utils.SendBadRequest(ctx, &response, "menu_item_id is not exist")
 	}
 
 	//check if customer_history_id exists
-	if customerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
+	if !customerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
 		return utils.SendBadRequest(ctx, &response, "customer_history_id is not exist")
 	}
 

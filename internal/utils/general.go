@@ -1,6 +1,10 @@
 package utils
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"strings"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func SendBadRequest(ctx *fiber.Ctx, response *map[string]interface{}, message string) error {
 	(*response)["message"] = message
@@ -15,4 +19,10 @@ func SendInternalServerError(ctx *fiber.Ctx, response *map[string]interface{}, m
 func SendStatusOK(ctx *fiber.Ctx, response *map[string]interface{}, message string) error {
 	(*response)["message"] = message
 	return ctx.Status(200).JSON(*response)
+}
+
+func GenerateKeyFromFilename(fileName string, key string) *string {
+	array := strings.Split(fileName, ".")
+	res := key + "." + array[len(array)-1]
+	return &res
 }

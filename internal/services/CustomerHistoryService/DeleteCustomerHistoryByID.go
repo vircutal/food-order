@@ -11,6 +11,7 @@ type DeleteCustomerHistoryByIDRequest struct {
 	CustomerHistoryID uuid.UUID `json:"customer_history_id"`
 }
 
+// Need to handle delete function properly
 func (ch *CustomerHistoryService) DeleteCustomerHistoryByID(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************

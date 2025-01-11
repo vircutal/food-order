@@ -67,8 +67,7 @@ func (ch *CustomerHistoryService) UpdateTableNumberInCustomerHistory(ctx *fiber.
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	ctx.Status(200)
 	response["message"] = "Updated"
-	return ctx.JSON(response)
+	return ctx.Status(200).JSON(response)
 
 }

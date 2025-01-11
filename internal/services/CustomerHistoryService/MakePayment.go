@@ -49,9 +49,7 @@ func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	if targetCustomerHistory.TotalPrice == nil {
-		targetCustomerHistory.TotalPrice = &totalPrice
-	}
+	targetCustomerHistory.TotalPrice = &totalPrice
 
 	if err := ch.CustomerHistoryRepository.UpdateOne(ctx.Context(), targetCustomerHistory); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
