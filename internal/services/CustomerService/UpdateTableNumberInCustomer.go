@@ -1,4 +1,4 @@
-package CustomerHistoryService
+package CustomerService
 
 import (
 	"food-order/internal/config"
@@ -9,15 +9,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type UpdateTableNumberInCustomerHistoryRequest struct {
-	CustomerHistoryID uuid.UUID `json:"customer_history_id"`
-	TableNumber       int       `json:"table_number"`
+type UpdateTableNumberInCustomerRequest struct {
+	CustomerID  uuid.UUID `json:"customer_id"`
+	TableNumber int       `json:"table_number"`
 }
 
-func (ch *CustomerHistoryService) UpdateTableNumberInCustomerHistory(ctx *fiber.Ctx) error {
+func (ch *CustomerService) UpdateTableNumberInCustomer(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
-	var request UpdateTableNumberInCustomerHistoryRequest
+	var request UpdateTableNumberInCustomerRequest
 	response := map[string]interface{}{}
 	tableInfoRepository := repositories.GetTableInfoRepository()
 
@@ -25,16 +25,16 @@ func (ch *CustomerHistoryService) UpdateTableNumberInCustomerHistory(ctx *fiber.
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	if !ch.CustomerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
+	if !ch.CustomerRepository.CheckExistByID(ctx.Context(), request.CustomerID) {
 		return utils.SendBadRequest(ctx, &response, "id is not exist")
 	}
 
-	targetCustomerHistory, err := ch.CustomerHistoryRepository.FindOneById(ctx.Context(), request.CustomerHistoryID)
+	targetCustomer, err := ch.CustomerRepository.FindOneById(ctx.Context(), request.CustomerID)
 	if err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	oldTable, err := tableInfoRepository.FindOneByTableNumber(ctx.Context(), targetCustomerHistory.TableNumber)
+	oldTable, err := tableInfoRepository.FindOneByTableNumber(ctx.Context(), targetCustomer.TableNumber)
 	if err := tableInfoRepository.UpdateOne(ctx.Context(), oldTable); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
@@ -62,8 +62,8 @@ func (ch *CustomerHistoryService) UpdateTableNumberInCustomerHistory(ctx *fiber.
 	}
 
 	//update customer
-	targetCustomerHistory.TableNumber = request.TableNumber
-	if err := ch.CustomerHistoryRepository.UpdateOne(ctx.Context(), targetCustomerHistory); err != nil {
+	targetCustomer.TableNumber = request.TableNumber
+	if err := ch.CustomerRepository.UpdateOne(ctx.Context(), targetCustomer); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 

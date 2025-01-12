@@ -1,5 +1,5 @@
 CREATE TABLE
-    IF NOT EXISTS customer_history (
+    IF NOT EXISTS customer (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
         table_number INTEGER NOT NULL,
         status TEXT NOT NULL,

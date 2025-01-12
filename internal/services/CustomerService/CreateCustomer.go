@@ -1,4 +1,4 @@
-package CustomerHistoryService
+package CustomerService
 
 import (
 	"food-order/internal/config"
@@ -12,15 +12,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateCustomerHistoryRequest struct {
+type CreateCustomerRequest struct {
 	TableNumber string `json:"table_number"`
 	Status      string `json:"status"`
 }
 
-func (ch *CustomerHistoryService) CreateCustomerHistory(ctx *fiber.Ctx) error {
+func (ch *CustomerService) CreateCustomer(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
-	var request CreateCustomerHistoryRequest
+	var request CreateCustomerRequest
 	response := map[string]interface{}{}
 
 	//Get service
@@ -47,12 +47,12 @@ func (ch *CustomerHistoryService) CreateCustomerHistory(ctx *fiber.Ctx) error {
 
 	//check if request's status is valid
 
-	if !config.CustomerHistoryStatus[request.Status] {
+	if !config.CustomerStatus[request.Status] {
 		return utils.SendBadRequest(ctx, &response, "Status is invalid")
 	}
 
 	//Add data to db
-	targetCustomerHistory := &models.CustomerHistory{
+	targetCustomer := &models.Customer{
 		ID:          uuid.New(),
 		TableNumber: TableNumber,
 		Status:      request.Status,
@@ -62,12 +62,12 @@ func (ch *CustomerHistoryService) CreateCustomerHistory(ctx *fiber.Ctx) error {
 		TotalPrice:  nil,
 	}
 
-	err := ch.CustomerHistoryRepository.AddOne(ctx.Context(), targetCustomerHistory)
+	err := ch.CustomerRepository.AddOne(ctx.Context(), targetCustomer)
 
 	if err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	} else {
-		return utils.SendStatusOK(ctx, &response, "New Customer History Added")
+		return utils.SendStatusOK(ctx, &response, "New Customer Added")
 	}
 
 }

@@ -17,9 +17,9 @@ func GetOrderLogRepository() *OrderLogRepository {
 	}
 }
 
-func (ol *OrderLogRepository) CheckOrderExistByIDs(ctx context.Context, customer_history_id, food_id uuid.UUID) bool {
+func (ol *OrderLogRepository) CheckOrderExistByIDs(ctx context.Context, customer_id, food_id uuid.UUID) bool {
 	var model models.OrderLog
-	err := ol.db.NewSelect().Model(&model).Where("customer_history_id = ?", customer_history_id).Where("food_id = ?", food_id).Scan(ctx)
+	err := ol.db.NewSelect().Model(&model).Where("customer_id = ?", customer_id).Where("food_id = ?", food_id).Scan(ctx)
 
 	if err != nil {
 		return false
@@ -28,8 +28,8 @@ func (ol *OrderLogRepository) CheckOrderExistByIDs(ctx context.Context, customer
 	return true
 }
 
-func (ol *OrderLogRepository) FindAllByCustomerHistoryID(ctx context.Context, customer_history_id uuid.UUID) (*[]models.OrderLog, error) {
+func (ol *OrderLogRepository) FindAllByCustomerID(ctx context.Context, customer_id uuid.UUID) (*[]models.OrderLog, error) {
 	var model []models.OrderLog
-	err := ol.db.NewSelect().Model(&model).Where("customer_history_id = ?", customer_history_id).Scan(ctx)
+	err := ol.db.NewSelect().Model(&model).Where("customer_id = ?", customer_id).Scan(ctx)
 	return &model, err
 }

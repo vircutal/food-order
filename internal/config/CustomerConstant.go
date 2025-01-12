@@ -5,7 +5,7 @@ const (
 	CustomerOccupied = "occupied"
 )
 
-var CustomerHistoryStatusTransitionRules = map[string]map[string]bool{
+var CustomerStatusTransitionRules = map[string]map[string]bool{
 	CustomerPaid: {
 		CustomerOccupied: true,
 	},
@@ -14,7 +14,7 @@ var CustomerHistoryStatusTransitionRules = map[string]map[string]bool{
 	},
 }
 
-var CustomerHistoryStatus = map[string]bool{
+var CustomerStatus = map[string]bool{
 	CustomerPaid:     true,
 	CustomerOccupied: true,
 }

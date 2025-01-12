@@ -7,8 +7,8 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type CustomerHistory struct {
-	bun.BaseModel `bun:"table:customer_history"`
+type Customer struct {
+	bun.BaseModel `bun:"table:customer"`
 
 	ID          uuid.UUID  `bun:"id,pk,type:UUID"`
 	TableNumber int        `bun:"table_number,type:INTEGER,notnull"`

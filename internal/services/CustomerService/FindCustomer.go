@@ -1,4 +1,4 @@
-package CustomerHistoryService
+package CustomerService
 
 import (
 	"food-order/internal/utils"
@@ -7,15 +7,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type FindCustomerHistoryByIDRequest struct {
-	CustomerHistoryID uuid.UUID `json:"customer_history_id"`
+type FindCustomerByIDRequest struct {
+	CustomerID uuid.UUID `json:"customer_id"`
 }
 
 // Not done
-func (ch *CustomerHistoryService) FindCustomerHistoryByID(ctx *fiber.Ctx) error {
+func (ch *CustomerService) FindCustomerByID(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
-	var request FindCustomerHistoryByIDRequest
+	var request FindCustomerByIDRequest
 	response := map[string]interface{}{}
 
 	if err := ctx.BodyParser(&request); err != nil {
@@ -24,15 +24,15 @@ func (ch *CustomerHistoryService) FindCustomerHistoryByID(ctx *fiber.Ctx) error 
 	//**************************************************************
 	//**************************************************************
 
-	if !ch.CustomerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
-		return utils.SendBadRequest(ctx, &response, "Customer History is not exist")
+	if !ch.CustomerRepository.CheckExistByID(ctx.Context(), request.CustomerID) {
+		return utils.SendBadRequest(ctx, &response, "Customer is not exist")
 	}
 
-	targetCustomerHistory, err := ch.CustomerHistoryRepository.FindOneById(ctx.Context(), request.CustomerHistoryID)
+	targetCustomer, err := ch.CustomerRepository.FindOneById(ctx.Context(), request.CustomerID)
 	if err != nil {
 		return utils.SendBadRequest(ctx, &response, err.Error())
 	}
 
-	response["result"] = *targetCustomerHistory
+	response["result"] = *targetCustomer
 	return ctx.JSON(response)
 }

@@ -1,4 +1,4 @@
-package CustomerHistoryService
+package CustomerService
 
 import (
 	"food-order/internal/repositories"
@@ -9,10 +9,10 @@ import (
 )
 
 type MakePaymentRequest struct {
-	CustomerHistoryId uuid.UUID `json:"customer_history_id"`
+	CustomerId uuid.UUID `json:"customer_id"`
 }
 
-func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
+func (ch *CustomerService) MakePayment(ctx *fiber.Ctx) error {
 	//initialize instance using in this function
 	//**************************************************************
 	var request MakePaymentRequest
@@ -23,11 +23,11 @@ func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	if !ch.CustomerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryId) {
+	if !ch.CustomerRepository.CheckExistByID(ctx.Context(), request.CustomerId) {
 		return utils.SendBadRequest(ctx, &response, "Customer id is not exist")
 	}
 
-	orders, err := orderLogRepository.FindAllByCustomerHistoryID(ctx.Context(), request.CustomerHistoryId)
+	orders, err := orderLogRepository.FindAllByCustomerID(ctx.Context(), request.CustomerId)
 
 	if err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
@@ -44,17 +44,17 @@ func (ch *CustomerHistoryService) MakePayment(ctx *fiber.Ctx) error {
 		totalPrice += (val.MenuItemPrice * float64(val.Quantity))
 	}
 
-	targetCustomerHistory, err := ch.CustomerHistoryRepository.FindOneById(ctx.Context(), request.CustomerHistoryId)
+	targetCustomer, err := ch.CustomerRepository.FindOneById(ctx.Context(), request.CustomerId)
 	if err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	targetCustomerHistory.TotalPrice = &totalPrice
+	targetCustomer.TotalPrice = &totalPrice
 
-	if err := ch.CustomerHistoryRepository.UpdateOne(ctx.Context(), targetCustomerHistory); err != nil {
+	if err := ch.CustomerRepository.UpdateOne(ctx.Context(), targetCustomer); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	response["result"] = *targetCustomerHistory
+	response["result"] = *targetCustomer
 	return ctx.JSON(response)
 }

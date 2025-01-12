@@ -12,11 +12,11 @@ import (
 )
 
 type CreateOrderLogRequest struct {
-	MenuItemID        uuid.UUID `json:"menu_item_id"`
-	CustomerHistoryID uuid.UUID `json:"customer_history_id"`
-	MenuItemPrice     string    `json:"menu_item_price"`
-	Quantity          string    `json:"quantity"`
-	OrderDescription  string    `json:"order_description"`
+	MenuItemID       uuid.UUID `json:"menu_item_id"`
+	CustomerID       uuid.UUID `json:"customer_id"`
+	MenuItemPrice    string    `json:"menu_item_price"`
+	Quantity         string    `json:"quantity"`
+	OrderDescription string    `json:"order_description"`
 }
 
 func (orderLogService *OrderLogService) CreateOrderLog(ctx *fiber.Ctx) error {
@@ -26,7 +26,7 @@ func (orderLogService *OrderLogService) CreateOrderLog(ctx *fiber.Ctx) error {
 	response := map[string]interface{}{}
 
 	menuItemRepository := repositories.GetMenuItemRepository()
-	customerHistoryRepository := repositories.GetCustomerHistoryRepository()
+	customerRepository := repositories.GetCustomerRepository()
 
 	if err := ctx.BodyParser(&request); err != nil {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
@@ -37,9 +37,9 @@ func (orderLogService *OrderLogService) CreateOrderLog(ctx *fiber.Ctx) error {
 		return utils.SendBadRequest(ctx, &response, "menu_item_id is not exist")
 	}
 
-	//check if customer_history_id exists
-	if !customerHistoryRepository.CheckExistByID(ctx.Context(), request.CustomerHistoryID) {
-		return utils.SendBadRequest(ctx, &response, "customer_history_id is not exist")
+	//check if customer__id exists
+	if !customerRepository.CheckExistByID(ctx.Context(), request.CustomerID) {
+		return utils.SendBadRequest(ctx, &response, "customer_id is not exist")
 	}
 
 	quantity, _ := strconv.Atoi(request.Quantity)
@@ -49,13 +49,13 @@ func (orderLogService *OrderLogService) CreateOrderLog(ctx *fiber.Ctx) error {
 	//**************************************************************
 
 	newOrderLog := models.OrderLog{
-		ID:                uuid.New(),
-		CustomerHistoryID: request.CustomerHistoryID,
-		MenuItemID:        request.MenuItemID,
-		MenuItemPrice:     menuItemPrice,
-		Quantity:          quantity,
-		OrderedTime:       time.Now(),
-		OrderDescription:  &request.OrderDescription,
+		ID:               uuid.New(),
+		CustomerID:       request.CustomerID,
+		MenuItemID:       request.MenuItemID,
+		MenuItemPrice:    menuItemPrice,
+		Quantity:         quantity,
+		OrderedTime:      time.Now(),
+		OrderDescription: &request.OrderDescription,
 	}
 
 	if err := orderLogService.OrderLogRepository.AddOne(ctx.Context(), &newOrderLog); err != nil {
