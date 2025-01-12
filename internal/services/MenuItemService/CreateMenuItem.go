@@ -15,7 +15,7 @@ type CreateMenuItemRequest struct {
 	MenuItemName        string                `form:"menu_item_name"`
 	MenuItemPrice       float64               `form:"menu_item_price"`
 	MenuItemDescription *string               `form:"menu_item_description"`
-	MenuItemImageURL    *multipart.FileHeader `form:"menu_item_image_url"`
+	MenuItemImage       *multipart.FileHeader `form:"menu_item_image"`
 }
 
 func (mi *MenuItemService) CreateMenuItem(ctx *fiber.Ctx) error {
@@ -32,7 +32,7 @@ func (mi *MenuItemService) CreateMenuItem(ctx *fiber.Ctx) error {
 		return utils.SendInternalServerError(ctx, &response, err.Error())
 	}
 
-	menu_item_image_file_header, _ := ctx.FormFile("menu_item_image_url")
+	menu_item_image_file_header, _ := ctx.FormFile("menu_item_image")
 	menuItemID := uuid.New()
 
 	if !menuRepository.CheckExistByID(ctx.Context(), request.MenuID) {

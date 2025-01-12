@@ -31,6 +31,7 @@ func GetRootController() *fiber.App {
 	r.Post("/CreateRestaurant", handler.RestaurantService.CreateRestaurant)
 	r.Post("/CreateMenu", handler.MenuService.CreateMenu)
 	r.Post("/CreateMenuItem", handler.MenuItemService.CreateMenuItem)
+	r.Patch("/UpdateMenuItem", handler.MenuItemService.UpdateMenuItem)
 
 	return r
 }
